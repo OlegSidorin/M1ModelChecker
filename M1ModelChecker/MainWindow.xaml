@@ -1,0 +1,57 @@
+﻿<Window x:Class="M1ModelChecker.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:M1ModelChecker"
+             mc:Ignorable="d" 
+             Title="Tiltle" Height="300" Width="450" Topmost="True" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="2" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" 
+                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5"
+                    Background="DarkSlateGray">
+            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\m1bigicon.png"
+                   Height="30" Margin="5,0,0,0"/>
+            <TextBlock Text="M1 MODEL CHECKER" VerticalAlignment="Center" 
+                       FontSize="18" Foreground="WhiteSmoke"
+                       Margin="5,0,0,0"/>
+        </StackPanel>
+        <Button Grid.Column="1" Grid.Row="3" Margin="0"
+                Background="AntiqueWhite"
+                Click="Test_01">
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <Image Height="20" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder.png" />
+                    <TextBlock Text="Open.." Margin="5,0,0,0"/>
+                </StackPanel>
+            </Button.Content>
+        </Button>
+        <StackPanel Grid.Row="3" Grid.Column="3" >
+            <TextBlock Text="Open file for cheking" Margin="0,5,0,0" />
+            <TextBlock x:Name="textBlockFilePath" Text="" />
+        </StackPanel>
+        
+    </Grid>
+</Window>

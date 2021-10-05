@@ -1,0 +1,84 @@
+﻿<Window x:Class="M1ModelChecker.FolderBrowserWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:M1ModelChecker"
+             mc:Ignorable="d" Topmost="True"
+        
+             Title="Помоги Даше найти файл Ревита" Height="363.333" Width="544" HorizontalAlignment="Center" VerticalAlignment="Center" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="10" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="1" Grid.Column="1" 
+                   HorizontalAlignment="Right" VerticalAlignment="Center"
+                   Text=" "/>
+        <ComboBox  x:Name="comboBox" Margin="0,0,0,4"
+                   Grid.Row="1" Grid.Column="2" 
+                   DropDownClosed="changeNewContentInListViewAndComboBox">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="12" Source="{Binding Path=ImgSource}" Margin="{Binding Path=LeftMargin}"/>
+                        <TextBlock Text="{Binding Path=Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="1" Grid.RowSpan="1"
+                Background="Transparent" BorderThickness="0"
+                Click="gotoParentDirectoryInListview"
+                Margin="4,0,0,4">
+            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder-up-icon.png"/>
+        </Button>
+        <ListView x:Name="listViewFiles" MouseDoubleClick="changeNewContentInListViewAndComboBox"
+                  Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="1"
+                  VerticalAlignment="Stretch">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView AllowsColumnReorder="True">
+                    <GridViewColumn Header="Имя" Width="150" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="12" 
+                                           Margin="0,0,2,0"
+                                           VerticalAlignment="Center" 
+                                           Source="{Binding Path=ImgSource}" />
+                                    <TextBlock Text="{Binding Path=Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2"
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Open" 
+                    HorizontalAlignment="Right" Width="100" />
+            <Button Content="Close" 
+                    HorizontalAlignment="Right" Width="100"
+                    Margin="10,0,0,0" Click="buttonClose"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

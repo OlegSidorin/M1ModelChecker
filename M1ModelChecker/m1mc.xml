@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RevitAddIns>
+	<AddIn Type="Application">
+		<Name>Just for fun</Name>
+		<Assembly>C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\bin\Debug\M1ModelChecker.dll</Assembly>
+		<AddInId>7E75B9EA-FF00-4952-86D8-58BF621F76B5</AddInId>
+		<FullClassName>M1ModelChecker.Main</FullClassName>
+		<VendorId>M1</VendorId>
+		<VendorDescription>Такая фирма, что еще сказать..</VendorDescription>
+	</AddIn>
+</RevitAddIns>
