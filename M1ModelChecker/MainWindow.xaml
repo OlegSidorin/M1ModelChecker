@@ -5,32 +5,34 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:M1ModelChecker"
              mc:Ignorable="d" 
-             Title="Tiltle" Height="300" Width="450" Topmost="True" WindowStartupLocation="CenterScreen">
+             Title="Tiltle" Height="348.666" Width="640.667" Topmost="True" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2" />
+            <RowDefinition Height="1" />
             <RowDefinition Height="40" />
             <RowDefinition Height="10" />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="2" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="5" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2" />
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="2" />
+            <ColumnDefinition Width="5" />
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" 
-                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5"
+                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7"
                     Background="DarkSlateGray">
             <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\m1bigicon.png"
                    Height="30" Margin="5,0,0,0"/>
@@ -38,19 +40,44 @@
                        FontSize="18" Foreground="WhiteSmoke"
                        Margin="5,0,0,0"/>
         </StackPanel>
-        <Button Grid.Column="1" Grid.Row="3" Margin="0"
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5">
+            <Button Margin="0"
+                Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
                 Background="AntiqueWhite"
-                Click="Test_01">
-            <Button.Content>
-                <StackPanel Orientation="Horizontal">
-                    <Image Height="20" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder.png" />
-                    <TextBlock Text="Open.." Margin="5,0,0,0"/>
-                </StackPanel>
-            </Button.Content>
-        </Button>
-        <StackPanel Grid.Row="3" Grid.Column="3" >
-            <TextBlock Text="Open file for cheking" Margin="0,5,0,0" />
-            <TextBlock x:Name="textBlockFilePath" Text="" />
+                Click="FindFileOrFolderForModelChecker">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="15" Width="25"  Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder.png" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <TextBlock x:Name="textBlockFilePath" Grid.ColumnSpan="3"
+                       VerticalAlignment="Center" Margin="5,0,0,0"
+                       Text="Не выбрано" />
+        </StackPanel>
+        <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="14" FontWeight="Medium"
+                   Text="Тест" />
+        <TextBlock Grid.Row="5" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="14" FontWeight="Medium"
+                   Text="Результаты" />
+        <TextBlock Grid.Row="5" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   FontSize="14" FontWeight="Medium"
+                   Text="Отчет" />
+        <StackPanel Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
+            <CheckBox Content="Тест №1. Чужие параметры." />
+        </StackPanel>
+        <StackPanel Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">
+            <CheckBox Content="Тест №2. " />
+        </StackPanel>
+        <StackPanel Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
+            <CheckBox Content="Тест №3. " />
+        </StackPanel>
+        <StackPanel Grid.Row="11" Grid.Column="1" VerticalAlignment="Center" 
+                    Grid.ColumnSpan="5"
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Провести тесты" Width="160" Height="30" Click="DoTests" />
+            <Button Content="Просто закрыть" Width="160" Height="30" Margin="10,0,0,0"/>
         </StackPanel>
         
     </Grid>

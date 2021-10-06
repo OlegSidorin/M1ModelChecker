@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Collections.ObjectModel;
 using Path = System.IO.Path;
+using Autodesk.Revit.UI;
+using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace M1ModelChecker
 {
@@ -23,12 +25,14 @@ namespace M1ModelChecker
     /// </summary>
     public partial class FolderBrowserWindow : Window
     {
-        Collection<FilePathViewModel> CollectionOfParenFolders;
+        Collection<FilePathViewModel> CollectionOfParentFolders;
+        public MainWindow MainWindow;
+        public ExternalCommandData CommandData;
         public FolderBrowserWindow()
         {
             InitializeComponent();
-            CollectionOfParenFolders = new Collection<FilePathViewModel>();
-            comboBox.ItemsSource = GetFilesAndFoldersCollectionForComboBox(@"\\ukkalita.local\iptg\Строительно-девелоперский дивизион\М1 Проект\Проекты\10. Отдел информационного моделирования\01. REVIT\01. Библиотека семейств\#На рассмотрение\Тест"); // (@"C:\Users\" + Environment.UserName);
+            CollectionOfParentFolders = new Collection<FilePathViewModel>();
+            comboBox.ItemsSource = GetFilesAndFoldersCollectionForComboBox(@"C:\Users\" + Environment.UserName); //  (@"\\ukkalita.local\iptg\Строительно-девелоперский дивизион\М1 Проект\Проекты\10. Отдел информационного моделирования\01. REVIT\01. Библиотека семейств\#На рассмотрение\Тест");
             //comboBox.SelectedIndex = 0;
         }
 
@@ -36,65 +40,103 @@ namespace M1ModelChecker
         {
             Close();
         }
-        void AddParenFoldersToCollection(string inputPath)
+        private void buttonOpen(object sender, RoutedEventArgs e)
         {
-            var i = inputPath.Count(x => x == '\\') - 1;
+            if (MainWindow != null)
+            {
+                MainWindow.textBlockFilePath.Text = textBlockSelectFileOrFolder.Text;
+                //MainWindow.textBlockFilePath.Tag = textBlockSelectFileOrFolder.Tag;
+                Close();
+            }
+            else
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.textBlockFilePath.Text = textBlockSelectFileOrFolder.Text;
+                //mainWindow.textBlockFilePath.Tag = textBlockSelectFileOrFolder.Tag;
+                mainWindow.Show();
+                Close();
+            }
+            
+        }
+        void AddParentFoldersToCollection(string inputPath)
+        {
+            var i = inputPath.Count(x => x == '\\');
+
             DirectoryInfo dirInfo = Directory.GetParent(inputPath);
             if (dirInfo != null)
             {
                 FilePathViewModel filePathViewModel = new FilePathViewModel()
                 {
-                    Name = dirInfo.Name,
+                    Name = dirInfo.Name + " " + (5*i).ToString(),
                     PathString = dirInfo.FullName,
-                    ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder-icon.png",
+                    ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-folder.png",
                     LeftMargin = new Thickness(5 * i, 0, 0, 0)
                 };
                 if (filePathViewModel.Name.Contains(":"))
-                    filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\harddisk.png";
-                CollectionOfParenFolders.Insert(0, filePathViewModel);
+                    filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-ssd.png";
+                if (filePathViewModel.Name.Contains("C:"))
+                    filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-c-drive.png";
+                if (filePathViewModel.Name.Contains("ukkalita.local"))
+                    filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-network.png";
+                CollectionOfParentFolders.Insert(0, filePathViewModel);
 
                 if (dirInfo.Parent != null)
                 {
-                    AddParenFoldersToCollection(dirInfo.FullName);
+                    AddParentFoldersToCollection(dirInfo.FullName);
                 };
             }
         }
-
-        private Collection<FilePathViewModel> GetFilesAndFoldersCollectionForComboBox (string input)
+        void AddFoldersToCollection(string inputPath)
         {
-            Collection<FilePathViewModel> outputCollection = new Collection<FilePathViewModel>();
-
-            AddParenFoldersToCollection(input);
-            Collection<FilePathViewModel> parentFoldersCollection = CollectionOfParenFolders;
-            foreach (var item in parentFoldersCollection)
-            {
-                outputCollection.Add(item);
-            }
-            var i = input.Count(x => x == '\\');
+            var i = inputPath.Count(x => x == '\\') + 1;
             try
             {
-                if (Directory.Exists(input))
+                if (Directory.Exists(inputPath))
                 {
-                    string name = Path.GetFileName(input);
+                    string name = Path.GetFileName(inputPath);
                     if (true)
                     {
                         var filePathViewModel = new FilePathViewModel()
                         {
-                            Name = name,
-                            PathString = input,
-                            ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder-icon.png",
+                            Name = name + " " + (5 * i).ToString(),
+                            PathString = inputPath,
+                            ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-folder.png",
                             LeftMargin = new Thickness(5 * i, 0, 0, 0)
                         };
                         if (filePathViewModel.Name.Contains(":"))
-                            filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\harddisk.png";
-                        outputCollection.Add(filePathViewModel);
+                            filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-ssd.png";
+                        if (filePathViewModel.Name.Contains("C:"))
+                            filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-c-drive.png";
+                        if (filePathViewModel.Name.Contains("ukkalita.local"))
+                            filePathViewModel.ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-network.png";
+                        CollectionOfParentFolders.Add(filePathViewModel);
                     }
                 }
                 else { }
             }
             catch { };
+            AddParentFoldersToCollection(inputPath);
+        }
+        private Collection<FilePathViewModel> GetFilesAndFoldersCollectionForComboBox (string inputPath)
+        {
+            Collection<FilePathViewModel> outputCollection = new Collection<FilePathViewModel>();
 
+            AddFoldersToCollection(inputPath);
 
+            Collection<FilePathViewModel> foldersCollection = CollectionOfParentFolders;
+            foreach (var item in foldersCollection)
+            {
+                outputCollection.Add(item);
+            }
+
+            var filePathViewModel = new FilePathViewModel()
+            {
+                Name = @"Проекты",
+                PathString = @"\\ukkalita.local\iptg\Строительно-девелоперский дивизион\М1 Проект\Проекты",
+                ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-network.png",
+                LeftMargin = new Thickness(5,0,0,0)
+            };
+            outputCollection.Add(filePathViewModel);
 
             //var filePathViewModel = new FilePathViewModel()
             //{
@@ -117,13 +159,13 @@ namespace M1ModelChecker
             //}
             return outputCollection;
         }
-        private Collection<FilePathViewModel> GetFilesAndFoldersCollectionForListView(string input)
+        private Collection<FilePathViewModel> GetFilesAndFoldersCollectionForListView(string inputPath)
         {
             Collection<FilePathViewModel> outputCollection = new Collection<FilePathViewModel>();
 
             try
             {
-                string[] dirPaths = Directory.GetDirectories(input);
+                string[] dirPaths = Directory.GetDirectories(inputPath);
                 foreach (var path in dirPaths)
                 {
                     try
@@ -131,13 +173,13 @@ namespace M1ModelChecker
                         if (Directory.Exists(path))
                         {
                             string name = Path.GetFileName(path);
-                            if (!name.Contains("."))
+                            if (true)
                             {
                                 var filePathViewModel = new FilePathViewModel()
                                 {
                                     Name = name,
                                     PathString = path,
-                                    ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder-icon.png"
+                                    ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-folder.png"
                                 };
                                 outputCollection.Add(filePathViewModel);
                             }
@@ -151,7 +193,7 @@ namespace M1ModelChecker
 
             try
             {
-                string[] filePaths = Directory.GetFiles(input);
+                string[] filePaths = Directory.GetFiles(inputPath);
 
                 foreach (var path in filePaths)
                 {
@@ -160,13 +202,13 @@ namespace M1ModelChecker
                         if (File.Exists(path))
                         {
                             string name = Path.GetFileName(path);
-                            if (name.Contains(".rfa"))
+                            if (name.Contains(".rvt"))
                             {
                                 var filePathViewModel = new FilePathViewModel()
                                 {
                                     Name = name,
                                     PathString = path,
-                                    ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\revitfile-icon.png"
+                                    ImgSource = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\revitfile.png"
                                 };
                                 outputCollection.Add(filePathViewModel);
                             }
@@ -182,23 +224,23 @@ namespace M1ModelChecker
         }
         private void changeNewContentInListViewAndComboBox(object sender, EventArgs e)
         {
-            string input = "";
+            string inputPath = "";
             try
             {
                 ComboBox comboBox = (ComboBox)sender;
                 FilePathViewModel filePathViewModel = (FilePathViewModel)comboBox.SelectedItem;
-                input = filePathViewModel.PathString;
+                inputPath = filePathViewModel.PathString;
             }
             catch { };
             try
             {
                 ListView listView = (ListView)sender;
                 FilePathViewModel filePathViewModel = (FilePathViewModel)listView.SelectedItem;
-                input = filePathViewModel.PathString;
+                inputPath = filePathViewModel.PathString;
             }
             catch { };
             // input - задали путь для текущей директории
-            Collection<FilePathViewModel> paths = GetFilesAndFoldersCollectionForListView(input);
+            Collection<FilePathViewModel> paths = GetFilesAndFoldersCollectionForListView(inputPath);
             if (paths.Count != 0)
             {
                 listViewFiles.ItemsSource = paths;
@@ -215,6 +257,36 @@ namespace M1ModelChecker
             //string path = filePathViewModel.PathString;
             //string parentPath = Directory.GetParent(path);
         }
+        private void listViewFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            FilePathViewModel filePathViewModel = new FilePathViewModel()
+            {
+                PathString = "",
+                Name = "Ничего не выбрано"
+            };
+            try
+            {
+                ComboBox comboBox = (ComboBox)sender;
+                filePathViewModel = (FilePathViewModel)comboBox.SelectedItem;
+            }
+            catch { };
+            try
+            {
+                ListView listView = (ListView)sender;
+                filePathViewModel = (FilePathViewModel)listView.SelectedItem;
+            }
+            catch { };
+
+            try
+            {
+                textBlockSelectFileOrFolder.Text = filePathViewModel.Name;
+                textBlockSelectFileOrFolder.Tag = filePathViewModel;
+            }
+            catch { }
+            
+
+        }
+
     }
     public class FilePathViewModel
     {
@@ -222,5 +294,19 @@ namespace M1ModelChecker
         public string Name { get; set; }
         public string ImgSource { get; set; }
         public Thickness LeftMargin { get; set; }
+        public bool IsFile
+        {
+            get
+            {
+                if (Name.Contains(".rvt"))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }

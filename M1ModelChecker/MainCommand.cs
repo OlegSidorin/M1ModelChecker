@@ -19,8 +19,17 @@ namespace M1ModelChecker
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             MainWindow mainWindow = new MainWindow();
+            mainWindow.CommandData = commandData;
             mainWindow.Show();
-            
+            int mysumm(int x, int y) => x + y;
+            int r = mysumm(2, 3);
+            (int, string) xy = (25, "sd");
+            string e = xy.Item1 + xy.Item2;
+            //FolderBrowserWindow folderBrowserWindow = new FolderBrowserWindow();
+            //folderBrowserWindow.CommandData = commandData;
+            //folderBrowserWindow.Show();
+            //FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            //folderBrowserDialog.ShowDialog();
             return Result.Succeeded;
         }
     }
