@@ -4,81 +4,108 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:M1ModelChecker"
-             mc:Ignorable="d" 
-             Title="Tiltle" Height="348.666" Width="640.667" Topmost="True" WindowStartupLocation="CenterScreen">
+             mc:Ignorable="d" Background="LightGray"
+             Title="Model checker" Height="434" Width="540.001" Topmost="True" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1" />
+            <RowDefinition Height="0" />
             <RowDefinition Height="40" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="35" />
-            <RowDefinition Height="5" />
             <RowDefinition Height="30" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="5" />
+            <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="7" />
+            <ColumnDefinition Width="8*" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="7" />
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal" 
                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7"
                     Background="DarkSlateGray">
-            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\m1bigicon.png"
-                   Height="30" Margin="5,0,0,0"/>
-            <TextBlock Text="M1 MODEL CHECKER" VerticalAlignment="Center" 
+            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\m1logo.png"
+                   Height="26" Margin="5,0,0,0"/>
+            <TextBlock Text="MODEL CHECKER" VerticalAlignment="Center" 
                        FontSize="18" Foreground="WhiteSmoke"
                        Margin="5,0,0,0"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="5">
             <Button Margin="0"
-                Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
-                Background="AntiqueWhite"
+                Height="30" HorizontalAlignment="Left" VerticalAlignment="Center"
+                Background="Transparent" BorderThickness="0"
                 Click="FindFileOrFolderForModelChecker">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="15" Width="25"  Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\folder.png" />
+                        <Image Height="25" Width="25"  Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-open-file-folder.png" />
                     </StackPanel>
                 </Button.Content>
             </Button>
             <TextBlock x:Name="textBlockFilePath" Grid.ColumnSpan="3"
                        VerticalAlignment="Center" Margin="5,0,0,0"
-                       Text="Не выбрано" />
+                       FontSize="14" Foreground="DarkSlateGray"
+                       Text="- Выбрать модель" />
         </StackPanel>
-        <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"
-                   FontSize="14" FontWeight="Medium"
-                   Text="Тест" />
-        <TextBlock Grid.Row="5" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"
-                   FontSize="14" FontWeight="Medium"
-                   Text="Результаты" />
-        <TextBlock Grid.Row="5" Grid.Column="5" VerticalAlignment="Center" HorizontalAlignment="Center"
-                   FontSize="14" FontWeight="Medium"
-                   Text="Отчет" />
+        <StackPanel Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="5" Grid.RowSpan="3" Background="White"/>
+        <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,0"
+                   FontSize="18" FontWeight="Medium"
+                   Text="Провести тесты" />
         <StackPanel Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
-            <CheckBox Content="Тест №1. Чужие параметры." />
+            <CheckBox Content="Тест №1. Проверка общих параметров модели" Margin="4,0,0,0" />
         </StackPanel>
         <StackPanel Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">
-            <CheckBox Content="Тест №2. " />
+            <CheckBox Content="Тест №2. " Margin="4,0,0,0" />
         </StackPanel>
         <StackPanel Grid.Row="8" Grid.Column="1" VerticalAlignment="Center">
-            <CheckBox Content="Тест №3. " />
+            <CheckBox Content="Тест №3. " Margin="4,0,0,0" />
         </StackPanel>
-        <StackPanel Grid.Row="11" Grid.Column="1" VerticalAlignment="Center" 
-                    Grid.ColumnSpan="5"
-                    Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Провести тесты" Width="160" Height="30" Click="DoTests" />
-            <Button Content="Просто закрыть" Width="160" Height="30" Margin="10,0,0,0"/>
+        <StackPanel Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" 
+                    Grid.ColumnSpan="7" Background="DarkSlateGray"
+                    Height="40"
+                    Orientation="Horizontal" >
         </StackPanel>
-        
+
+        <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Right"
+                Foreground="Snow" BorderThickness="0" Margin="0,0,160,0"
+                FontSize="14"
+                Click="DoTests"
+                Width="160" Height="30" Background="Transparent">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="28" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-testing.png" />
+                <TextBlock Text="Провести тесты" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Right"
+                Foreground="Snow" BorderThickness="0" Margin="0,0,10,0"
+                FontSize="14"
+                Click="CloseWindow"
+                Width="160" Height="30" Background="Transparent">
+            <StackPanel Orientation="Horizontal">
+                <Image Height="24" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-delete.png" />
+                <TextBlock Text="Закрыть" VerticalAlignment="Center" Margin="6,0,0,0"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Right"
+                Foreground="Snow" BorderThickness="0" Margin="0,0,320,0"
+                FontSize="14" Name="buttonShowReport"
+                Click="ShowReport" Visibility="Hidden"
+                Width="160" Height="30" Background="Transparent">
+            <StackPanel Orientation="Horizontal">
+                <Image Height="26" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-report.png" />
+                <TextBlock Text="Посмотреть отчет" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+        </Button>
+
+
+
     </Grid>
 </Window>

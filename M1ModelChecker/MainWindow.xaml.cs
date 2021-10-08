@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MessageBox = System.Windows.Forms.MessageBox;
+using static M1ModelChecker.CM;
 
 namespace M1ModelChecker
 {
@@ -27,6 +28,8 @@ namespace M1ModelChecker
         public ExternalCommandData CommandData;
         public DoTests_ExternalEventHandler DoTests_ExternalEventHandler;
         public ExternalEvent DoTests_ExternalEvent;
+        public string Report { get; set; }
+        public FlowDocument FlowDocument { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -43,36 +46,61 @@ namespace M1ModelChecker
 
         private void FindFileOrFolderForModelChecker(object sender, RoutedEventArgs e)
         {
-            //var fileContent = string.Empty;
-            //var filePath = string.Empty;
+            var fileContent = string.Empty;
+            var filePath = string.Empty;
 
-            //using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            //{
-            //    openFileDialog.InitialDirectory = @"C:\Users\" + Environment.UserName; ;
-            //    openFileDialog.Filter = "rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";
-            //    openFileDialog.FilterIndex = 1;
-            //    openFileDialog.RestoreDirectory = true;
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = @"C:\Users\" + Environment.UserName; ;
+                openFileDialog.Filter = "rvt files (*.rvt)|*.rvt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
 
-            //    if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //    {
-            //        filePath = openFileDialog.FileName;
-            //    }
-            //}
-            //textBlockFilePath.Text = filePath;
+                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    filePath = openFileDialog.FileName;
+                }
+            }
+            FilePathViewModel filePathViewModel = new FilePathViewModel()
+            {
+                Name = System.IO.Path.GetFileName(filePath),
+                PathString = filePath
+            };
+            textBlockFilePath.Text = filePathViewModel.Name;
+            textBlockFilePath.Tag = filePathViewModel;
+
             //MessageBox.Show(fileContent, "File Content at path: " + filePath, MessageBoxButtons.OK);
-            FolderBrowserWindow folderBrowserWindow = new FolderBrowserWindow();
-            folderBrowserWindow.MainWindow = this;
-            folderBrowserWindow.CommandData = CommandData;
-            folderBrowserWindow.Show();
+
+            //FolderBrowserWindow folderBrowserWindow = new FolderBrowserWindow();
+            //folderBrowserWindow.MainWindow = this;
+            //folderBrowserWindow.CommandData = CommandData;
+            //folderBrowserWindow.Show();
         }
 
         private void DoTests(object sender, RoutedEventArgs e)
         {
             DoTests_ExternalEventHandler.MainWindow = this;
             DoTests_ExternalEventHandler.CommandData = CommandData;
-            
             DoTests_ExternalEvent.Raise();
 
+        }
+
+        private void ShowReport(object sender, RoutedEventArgs e)
+        {
+            ReportWindow reportWindow = new ReportWindow();
+            reportWindow.Report = Report;
+
+            FlowDocument flowDocument = new FlowDocument();
+            
+            //Paragraph p = new Paragraph(new Run(Report));
+            //flowDocument.Blocks.Add(p);
+            reportWindow.flowDocScrollViewer.Document = FlowDocument;
+            reportWindow.Show();
+        }
+
+        private void CloseWindow(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -45,14 +45,14 @@ namespace M1ModelChecker
             if (MainWindow != null)
             {
                 MainWindow.textBlockFilePath.Text = textBlockSelectFileOrFolder.Text;
-                //MainWindow.textBlockFilePath.Tag = textBlockSelectFileOrFolder.Tag;
+                MainWindow.textBlockFilePath.Tag = textBlockSelectFileOrFolder.Tag;
                 Close();
             }
             else
             {
                 MainWindow mainWindow = new MainWindow();
                 mainWindow.textBlockFilePath.Text = textBlockSelectFileOrFolder.Text;
-                //mainWindow.textBlockFilePath.Tag = textBlockSelectFileOrFolder.Tag;
+                mainWindow.textBlockFilePath.Tag = textBlockSelectFileOrFolder.Tag;
                 mainWindow.Show();
                 Close();
             }
@@ -287,26 +287,5 @@ namespace M1ModelChecker
 
         }
 
-    }
-    public class FilePathViewModel
-    {
-        public string PathString { get; set; }
-        public string Name { get; set; }
-        public string ImgSource { get; set; }
-        public Thickness LeftMargin { get; set; }
-        public bool IsFile
-        {
-            get
-            {
-                if (Name.Contains(".rvt"))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
     }
 }
