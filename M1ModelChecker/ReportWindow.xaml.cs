@@ -22,7 +22,6 @@ namespace M1ModelChecker
     /// </summary>
     public partial class ReportWindow : Window
     {
-        public string Report { get; set; }
         public ReportWindow()
         {
             InitializeComponent();
@@ -31,13 +30,13 @@ namespace M1ModelChecker
 
         private void ClickOK(object sender, RoutedEventArgs e)
         {
-            
+
             //TextRange t = new TextRange(flowDocScrollViewer.Document.ContentStart, flowDocScrollViewer.Document.ContentEnd);
             //using (FileStream file = new FileStream(@"C:\Users\o.sidorin\Downloads\test.rtf", FileMode.Create))
             //{
             //    t.Save(file, System.Windows.DataFormats.Rtf);
             //}
-
+            flowDocScrollViewer.Document = null;
             Close();
         }
 

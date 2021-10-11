@@ -25,14 +25,16 @@ namespace M1ModelChecker
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string ImageLogoSource =  @"~\..\res\m1logo.png";
         public ExternalCommandData CommandData;
         public DoTests_ExternalEventHandler DoTests_ExternalEventHandler;
         public ExternalEvent DoTests_ExternalEvent;
         public string Report { get; set; }
-        public FlowDocument FlowDocument { get; set; }
+        public static FlowDocument FlowDocument { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            
             try
             {
                 DoTests_ExternalEventHandler = new DoTests_ExternalEventHandler();
@@ -79,28 +81,43 @@ namespace M1ModelChecker
 
         private void DoTests(object sender, RoutedEventArgs e)
         {
-            DoTests_ExternalEventHandler.MainWindow = this;
-            DoTests_ExternalEventHandler.CommandData = CommandData;
-            DoTests_ExternalEvent.Raise();
+
+            bool ifTest01Rise = chBox_Test01.IsChecked.GetValueOrDefault();
+            if (ifTest01Rise)
+            {
+                DoTests_ExternalEventHandler.MainWindow = this;
+                DoTests_ExternalEventHandler.CommandData = CommandData;
+                DoTests_ExternalEvent.Raise();
+            }
+            if (!ifTest01Rise)
+                MessageBox.Show("Не выбран Тест №1");
 
         }
 
         private void ShowReport(object sender, RoutedEventArgs e)
         {
             ReportWindow reportWindow = new ReportWindow();
-            reportWindow.Report = Report;
 
-            FlowDocument flowDocument = new FlowDocument();
+            FlowDocument flowDocument = MainWindow.FlowDocument;
             
-            //Paragraph p = new Paragraph(new Run(Report));
-            //flowDocument.Blocks.Add(p);
-            reportWindow.flowDocScrollViewer.Document = FlowDocument;
+            try
+            {
+                reportWindow.flowDocScrollViewer.Document = flowDocument;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+
             reportWindow.Show();
         }
 
         private void CloseWindow(object sender, RoutedEventArgs e)
         {
             Close();
+            
         }
     }
 }

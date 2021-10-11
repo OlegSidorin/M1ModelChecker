@@ -34,7 +34,7 @@
         <StackPanel Orientation="Horizontal" 
                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7"
                     Background="DarkSlateGray">
-            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\m1logo.png"
+            <Image Source="pack://application:,,,/res/m1logo.png"
                    Height="20" Margin="5,0,0,0"/>
             <TextBlock Text="ОТЧЕТ" VerticalAlignment="Center" 
                        FontSize="18" Foreground="WhiteSmoke"
@@ -51,7 +51,7 @@
                 Click="ClickOK"
                 Width="100" Height="30" Background="Transparent">
             <StackPanel Orientation="Horizontal">
-                <Image Height="24" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-checkmark.png" />
+                <Image Height="24" Source="/M1ModelChecker;Component/res/icons8-checkmark.png" />
                 <TextBlock Text="ОК" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
         </Button>
@@ -61,7 +61,7 @@
                 Click="ClickSave"
                 Width="100" Height="30" Background="Transparent">
             <StackPanel Orientation="Horizontal">
-                <Image Height="24" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-save.png" />
+                <Image Height="24" Source="/M1ModelChecker;Component/res/icons8-save.png" />
                 <TextBlock Text="Сохранить" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
         </Button>

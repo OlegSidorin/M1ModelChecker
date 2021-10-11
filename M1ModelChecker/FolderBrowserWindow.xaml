@@ -47,7 +47,7 @@
                 Background="Transparent" BorderThickness="0"
                 Click="gotoParentDirectoryInListview"
                 Margin="4,0,0,4">
-            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-symlink-directory.png"/>
+            <Image Source="pack://application:,,,/res/icons8-symlink-directory.png"/>
         </Button>
         <ListView x:Name="listViewFiles" 
                   MouseDoubleClick="changeNewContentInListViewAndComboBox"

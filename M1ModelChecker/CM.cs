@@ -8,7 +8,7 @@ namespace M1ModelChecker
 {
     class CM
     {
-        public static string PathToFOP { get; } = @"C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\ФОП2019.txt";
+        public static string PathToFOP { get; } = Main.DllFolderLocation + @"\res\ФОП2019.txt";
         public static List<SharedParameterFromFOP> SharedParametersFromFOP { get; } = GetSharedParametersFromFOP();
         public static List<SharedParameterFromFOP> GetSharedParametersFromFOP()
         {

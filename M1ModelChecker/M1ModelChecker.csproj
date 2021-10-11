@@ -85,10 +85,12 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ParameterAndFamily.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportWindow.xaml.cs">
       <DependentUpon>ReportWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SharedParameterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HTMLPage1.html" />
@@ -105,48 +107,54 @@
     <Content Include="res\harddisk.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="res\icons8-c-drive.png">
+    <Resource Include="res\icons8-c-drive.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-checkmark.png">
+    </Resource>
+    <Resource Include="res\icons8-checkmark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-delete-16.png" />
-    <Content Include="res\icons8-delete.png" />
-    <Content Include="res\icons8-folder.png">
+    </Resource>
+    <Resource Include="res\icons8-delete-16.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-monitor.png">
+    </Resource>
+    <Resource Include="res\icons8-delete.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-network.png">
+    </Resource>
+    <Resource Include="res\icons8-folder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-open-file-folder.png">
+    </Resource>
+    <Resource Include="res\icons8-monitor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-report.png">
+    </Resource>
+    <Resource Include="res\icons8-network.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-save.png">
+    </Resource>
+    <Resource Include="res\icons8-open-file-folder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-shared-folder.png">
+    </Resource>
+    <Resource Include="res\icons8-report.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-ssd.png">
+    </Resource>
+    <Resource Include="res\icons8-save.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-symlink-directory.png">
+    </Resource>
+    <Resource Include="res\icons8-shared-folder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="res\icons8-testing.png">
+    </Resource>
+    <Resource Include="res\icons8-ssd.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Resource>
+    <Resource Include="res\icons8-symlink-directory.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="res\icons8-testing.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="res\m1bigicon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="res\m1logo.png" />
+    <Resource Include="res\m1logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="res\m1mc.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

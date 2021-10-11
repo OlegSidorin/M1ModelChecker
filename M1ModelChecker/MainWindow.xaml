@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:M1ModelChecker"
-             mc:Ignorable="d" Background="LightGray"
+             xmlns:local="clr-namespace:M1ModelChecker" xmlns:local1="clr-namespace:System.Drawing;assembly=System.Drawing"
+        mc:Ignorable="d" Background="LightGray"
              Title="Model checker" Height="434" Width="540.001" Topmost="True" WindowStartupLocation="CenterScreen">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0" />
@@ -30,11 +31,16 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="7" />
         </Grid.ColumnDefinitions>
+        <UserControl>
+            <UserControl.Resources>
+                <local1:ImageConverter x:Key="MyImageConverter" />
+            </UserControl.Resources>
+        </UserControl>
         <StackPanel Orientation="Horizontal" 
                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="7"
                     Background="DarkSlateGray">
-            <Image Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\m1logo.png"
-                   Height="26" Margin="5,0,0,0"/>
+            <Image Source="/M1ModelChecker;Component/res/m1logo.png"
+                   Height="26" Width="46" Margin="5,0,0,0"/>
             <TextBlock Text="MODEL CHECKER" VerticalAlignment="Center" 
                        FontSize="18" Foreground="WhiteSmoke"
                        Margin="5,0,0,0"/>
@@ -46,7 +52,7 @@
                 Click="FindFileOrFolderForModelChecker">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
-                        <Image Height="25" Width="25"  Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-open-file-folder.png" />
+                        <Image Height="25" Width="25"  Source="/M1ModelChecker;Component/res/icons8-open-file-folder.png" />
                     </StackPanel>
                 </Button.Content>
             </Button>
@@ -60,7 +66,7 @@
                    FontSize="18" FontWeight="Medium"
                    Text="Провести тесты" />
         <StackPanel Grid.Row="6" Grid.Column="1" VerticalAlignment="Center">
-            <CheckBox Content="Тест №1. Проверка общих параметров модели" Margin="4,0,0,0" />
+            <CheckBox x:Name="chBox_Test01" Content="Тест №1. Проверка общих параметров модели" Margin="4,0,0,0" />
         </StackPanel>
         <StackPanel Grid.Row="7" Grid.Column="1" VerticalAlignment="Center">
             <CheckBox Content="Тест №2. " Margin="4,0,0,0" />
@@ -80,7 +86,7 @@
                 Click="DoTests"
                 Width="160" Height="30" Background="Transparent">
             <StackPanel Orientation="Horizontal">
-                <Image Width="28" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-testing.png" />
+                <Image Width="28" Height="28"  Source="/M1ModelChecker;Component/res/icons8-testing.png" />
                 <TextBlock Text="Провести тесты" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
         </Button>
@@ -90,7 +96,7 @@
                 Click="CloseWindow"
                 Width="160" Height="30" Background="Transparent">
             <StackPanel Orientation="Horizontal">
-                <Image Height="24" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-delete.png" />
+                <Image Height="24" Source="/M1ModelChecker;Component/res/icons8-delete.png" />
                 <TextBlock Text="Закрыть" VerticalAlignment="Center" Margin="6,0,0,0"/>
             </StackPanel>
         </Button>
@@ -100,7 +106,7 @@
                 Click="ShowReport" Visibility="Hidden"
                 Width="160" Height="30" Background="Transparent">
             <StackPanel Orientation="Horizontal">
-                <Image Height="26" Source="C:\Users\o.sidorin\source\repos\M1ModelChecker\M1ModelChecker\res\icons8-report.png" />
+                <Image Height="26" Width="26" Source="/M1ModelChecker;Component/res/icons8-report.png" />
                 <TextBlock Text="Посмотреть отчет" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
         </Button>
