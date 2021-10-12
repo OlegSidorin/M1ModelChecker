@@ -16,6 +16,7 @@ using System.Windows.Documents;
 using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
+using Autodesk.Revit.DB.Events;
 
 namespace M1ModelChecker
 {
@@ -39,11 +40,13 @@ namespace M1ModelChecker
                     Audit = false,
                     DetachFromCentralOption = DetachFromCentralOption.DetachAndDiscardWorksets
                 };
+                app.FailuresProcessing += FaliureProcessor;
 
                 Document doc = app.OpenDocumentFile(ModelPathUtils.ConvertUserVisiblePathToModelPath(filePathVM.PathString), openOptions);
 
-                FlowDocument = new FlowDocument();
 
+                #region start FlowDocument
+                FlowDocument = new FlowDocument();
                 Paragraph pTitle = new Paragraph();
                 pTitle.Margin = new Thickness(0, 0, 0, 0);
                 Run runTitle01 = new Run();
@@ -59,7 +62,7 @@ namespace M1ModelChecker
                 runTitle02.FontSize = 12;
                 pTitle.Inlines.Add(runTitle02);
                 FlowDocument.Blocks.Add(pTitle);
-
+                
                 Paragraph pDate = new Paragraph();
                 pDate.Margin = new Thickness(0, 0, 0, 0);
                 Run runDate01 = new Run();
@@ -84,12 +87,13 @@ namespace M1ModelChecker
                 run.FontSize = 14;
                 run.FontFamily = new System.Windows.Media.FontFamily("Verdana");
                 pHead.Inlines.Add(run);
-
                 FlowDocument.Blocks.Add(pHead);
-                string str = "Параметры не из ФОП, не рекомендуется использовать:";
-                var sharedParameters = new FilteredElementCollector(doc).OfClass(typeof(SharedParameterElement)).ToElements();
-                var badSharedParameters = new List<SharedParameterViewModel>();
+                #endregion 
 
+                string str = "Параметры не из ФОП, не рекомендуется использовать:";
+                List<SharedParameterElement> sharedParameters = new FilteredElementCollector(doc).OfClass(typeof(SharedParameterElement)).Cast<SharedParameterElement>().ToList();
+
+                List<ParameterAndFamily> listOfParametersAndComments = new List<ParameterAndFamily>();
                 foreach (SharedParameterElement parameter in sharedParameters)
                 {
                     string report = "";
@@ -97,91 +101,185 @@ namespace M1ModelChecker
                     string name = parameter.Name;
                     if (IsSomethingWrongWithParameter(guid, name, out report))
                     {
-                        Paragraph pBody = new Paragraph();
-                        pBody.Margin = new Thickness(7, 0, 0, 0);
-                        Run runName = new Run();
-                        runName.Text = $"{name}";
-                        runName.FontFamily = new System.Windows.Media.FontFamily("Verdana");
-                        runName.FontWeight = FontWeights.Bold;
-                        runName.FontSize = 12;
-                        pBody.Inlines.Add(runName);
-                        Run runReport = new Run();
-                        runReport.Text = $" - {report}";
-                        runReport.FontFamily = new System.Windows.Media.FontFamily("Verdana");
-                        runReport.FontWeight = FontWeights.Normal;
-                        runReport.FontSize = 12;
-                        pBody.Inlines.Add(runReport);
-                        FlowDocument.Blocks.Add(pBody);
-
-                        badSharedParameters.Add(new SharedParameterViewModel()
+                        var parameterAndFamily = new ParameterAndFamily()
                         {
-                            Name = name,
-                            Guid = guid
-                        });
-
+                            ParameterName = name,
+                            ParameterGuid = guid,
+                            Comment = report
+                        };
+                        listOfParametersAndComments.Add(parameterAndFamily);
                         str += $"\n{name} - {report}";
                     }
-                    
                 }
+
+                #region make FlowDocument
+                foreach (ParameterAndFamily pf in listOfParametersAndComments)
+                {
+                    Paragraph pBody = new Paragraph();
+                    pBody.Margin = new Thickness(7, 0, 0, 0);
+                    Run runName = new Run();
+                    runName.Text = $"{pf.ParameterName}";
+                    runName.FontFamily = new System.Windows.Media.FontFamily("Verdana");
+                    runName.FontWeight = FontWeights.Bold;
+                    runName.FontSize = 12;
+                    pBody.Inlines.Add(runName);
+                    Run runReport = new Run();
+                    runReport.Text = $" - {pf.Comment}";
+                    runReport.FontFamily = new System.Windows.Media.FontFamily("Verdana");
+                    runReport.FontWeight = FontWeights.Normal;
+                    runReport.FontSize = 12;
+                    pBody.Inlines.Add(runReport);
+                    FlowDocument.Blocks.Add(pBody);
+                }
+                #endregion
+                
                 var familySymbols = new FilteredElementCollector(doc).OfClass(typeof(FamilySymbol)).ToElements();
+
                 var listOfParametersAndFamilies = new List<ParameterAndFamily>();
                 foreach (FamilySymbol fs in familySymbols)
                 {
-                    foreach(var shPar in badSharedParameters)
+                    foreach(var shPar in listOfParametersAndComments)
                     {
-                        Parameter p = fs.LookupParameter(shPar.Name);
+                        Parameter p = fs.LookupParameter(shPar.ParameterName);
                         if (p != null)
                         {
                             listOfParametersAndFamilies.Add(new ParameterAndFamily()
                             {
-                                ParameterName = shPar.Name,
+                                ParameterName = shPar.ParameterName,
+                                ParameterGuid = shPar.ParameterGuid,
                                 FamilyName = fs.FamilyName
                             });
-                            
                         }
                     }
-                    
                 }
-                var listOfParametersAndFamiliesDistinct = new List<ParameterAndFamily>();
-                bool isInList (ParameterAndFamily pf, List<ParameterAndFamily> listOfPF)
+
+                ParameterAndFamily PF = new ParameterAndFamily();
+                var listOfParametersAndFamiliesDistinct = PF.GetDistinct(listOfParametersAndFamilies);
+
+                //foreach (ParameterAndFamily pf in listOfParametersAndFamiliesDistinct)
+                //{
+                //    Paragraph pBody = new Paragraph();
+                //    pBody.Margin = new Thickness(7, 0, 0, 0);
+                //    Run run01 = new Run();
+                //    run01.Text = $"Параметр {pf.ParameterName} {pf.ParameterGuid} содержится в семействе {pf.FamilyName}";
+                //    run01.FontFamily = new System.Windows.Media.FontFamily("Verdana");
+                //    run01.FontWeight = FontWeights.Light;
+                //    run01.FontSize = 12;
+                //    pBody.Inlines.Add(run01);
+                //    FlowDocument.Blocks.Add(pBody);
+                //}
+
+                Paragraph pBody101 = new Paragraph();
+                pBody101.Margin = new Thickness(0, 5, 0, 5);
+                Run run101 = new Run
                 {
-                    foreach (var item in listOfPF)
-                    {
-                        if (item.ParameterName == pf.ParameterName)
-                        {
-                            if (item.FamilyName == pf.FamilyName)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                }
-               
-                foreach (ParameterAndFamily pf in listOfParametersAndFamilies)
+                    Text = "Параметры со списком семейств, в которых он был обнаружен:",
+                    FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                    FontWeight = FontWeights.Bold,
+                    FontSize = 14
+                };
+                pBody101.Inlines.Add(run101);
+                FlowDocument.Blocks.Add(pBody101);
+
+                var listOfParameterAndFamilies = PF.GetParametersWithListOfFamilies(listOfParametersAndFamiliesDistinct);
+                foreach (var item in listOfParameterAndFamilies)
                 {
-                    if(!isInList(pf, listOfParametersAndFamiliesDistinct))
+                    Paragraph pBody01 = new Paragraph();
+                    pBody01.Margin = new Thickness(7, 0, 0, 0);
+                    Run run011 = new Run
                     {
-                        listOfParametersAndFamiliesDistinct.Add(pf);
-                    }
+                        Text = $"Параметр ",
+                        FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 12
+                    };
+                    pBody01.Inlines.Add(run011);
+                    Run run012 = new Run()
+                    {
+                        Text = $"{item.ParameterName}",
+                        FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                        FontWeight = FontWeights.Bold,
+                        FontSize = 12
+                    };
+                    pBody01.Inlines.Add(run012);
+                    Run run013 = new Run
+                    {
+                        Text = $" содержится в семействах:",
+                        FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 12
+                    };
+                    pBody01.Inlines.Add(run013);
+                    FlowDocument.Blocks.Add(pBody01);
+                    Paragraph pBody02 = new Paragraph();
+                    pBody02.Margin = new Thickness(25, 0, 0, 0);
+                    Run run02 = new Run();
+                    run02.Text = $"{item.GetFamiliesInOneSting()}";
+                    run02.FontFamily = new System.Windows.Media.FontFamily("Verdana");
+                    run02.FontWeight = FontWeights.Normal;
+                    run02.FontStyle = FontStyles.Italic;
+                    run02.FontSize = 12;
+                    pBody02.Inlines.Add(run02);
+                    FlowDocument.Blocks.Add(pBody02);
                 }
-                var listOfParametersAndListOfFamilies = new List<ParameterAndFamily>();
-                bool nameIsAlreadyInList(ParameterAndFamily pf, List<ParameterAndFamily> listOfPF)
+
+                Paragraph pBody202 = new Paragraph()
                 {
-                    foreach(var item in listOfParametersAndFamilies)
-                    {
-                        if (pf.ParameterName == item.ParameterName)
-                            return true;
-                    }
-                    return false;
-                }
-                foreach (ParameterAndFamily pf in listOfParametersAndFamiliesDistinct)
+                    Margin = new Thickness(0, 5, 0, 5),
+                };
+                Run run202 = new Run
                 {
-                    if (!nameIsAlreadyInList(pf, listOfParametersAndListOfFamilies))
+                    Text = "Семейства со списком нежелательных параметров:",
+                    FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                    FontWeight = FontWeights.Bold,
+                    FontSize = 14
+                };
+                pBody202.Inlines.Add(run202);
+                FlowDocument.Blocks.Add(pBody202);
+
+                var listOfFamilyAndParameters = PF.GetFamilyWithListOfParameters(listOfParametersAndFamiliesDistinct);
+                foreach (var item in listOfFamilyAndParameters)
+                {
+                    Paragraph pBody01 = new Paragraph();
+                    pBody01.Margin = new Thickness(7, 0, 0, 0);
+                    Run run011 = new Run
                     {
-                        pf.FamilyNames.Add(pf.FamilyName);
-                    }
+                        Text = $"В семействе ",
+                        FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 12
+                    };
+                    pBody01.Inlines.Add(run011);
+                    Run run012 = new Run()
+                    {
+                        Text = $"{item.FamilyName}",
+                        FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                        FontWeight = FontWeights.Bold,
+                        FontSize = 12
+                    };
+                    pBody01.Inlines.Add(run012);
+                    Run run013 = new Run
+                    {
+                        Text = $" содержатся нежелательные параметры:",
+                        FontFamily = new System.Windows.Media.FontFamily("Verdana"),
+                        FontWeight = FontWeights.Normal,
+                        FontSize = 12
+                    };
+                    pBody01.Inlines.Add(run013);
+                    FlowDocument.Blocks.Add(pBody01);
+                    Paragraph pBody02 = new Paragraph();
+                    pBody02.Margin = new Thickness(25, 0, 0, 0);
+                    Run run02 = new Run();
+                    run02.Text = $"{item.GetParametersInOneSting()}";
+                    run02.FontFamily = new System.Windows.Media.FontFamily("Verdana");
+                    run02.FontWeight = FontWeights.Normal;
+                    run02.FontStyle = FontStyles.Italic;
+                    run02.FontSize = 12;
+                    pBody02.Inlines.Add(run02);
+                    FlowDocument.Blocks.Add(pBody02);
                 }
+
+                /*
                 foreach (ParameterAndFamily pf in listOfParametersAndFamiliesDistinct)
                 {
                     Paragraph pBody = new Paragraph();
@@ -194,7 +292,9 @@ namespace M1ModelChecker
                     pBody.Inlines.Add(run01);
                     FlowDocument.Blocks.Add(pBody);
                 }
+                */
                 bool docClosed = doc.Close(false);
+                FlowDocument.TextAlignment = TextAlignment.Left;
                 MainWindow.FlowDocument = FlowDocument;
                 MainWindow.Report = str;
                 MainWindow.buttonShowReport.Visibility = System.Windows.Visibility.Visible;
@@ -202,7 +302,7 @@ namespace M1ModelChecker
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Возникли проблемы с открытием. \n" + ex.ToString());
+                System.Windows.MessageBox.Show("Возникли проблемы с открытием. И вот какие: \n" + ex.ToString());
             };
             
             //MessageBox.Show("Privet");
@@ -212,6 +312,46 @@ namespace M1ModelChecker
         public string GetName()
         {
             return "External DoTests Event";
+        }
+
+        private void FaliureProcessor(object sender, FailuresProcessingEventArgs e)
+        {
+            bool hasFailure = false;
+            FailuresAccessor fas = e.GetFailuresAccessor();
+            List<FailureMessageAccessor> fma = fas.GetFailureMessages().ToList();
+            List<ElementId> ElemntsToDelete = new List<ElementId>();
+            foreach (FailureMessageAccessor fa in fma)
+            {
+                try
+                {
+
+                    //use the following lines to delete the warning elements
+                    List<ElementId> FailingElementIds = fa.GetFailingElementIds().ToList();
+                    ElementId FailingElementId = FailingElementIds[0];
+                    if (!ElemntsToDelete.Contains(FailingElementId))
+                    {
+                        ElemntsToDelete.Add(FailingElementId);
+                    }
+
+                    hasFailure = true;
+                    fas.DeleteWarning(fa);
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            if (ElemntsToDelete.Count > 0)
+            {
+                fas.DeleteElements(ElemntsToDelete);
+            }
+            //use the following line to disable the message supressor after the external command ends
+            //CachedUiApp.Application.FailuresProcessing -= FaliureProcessor;
+            if (hasFailure)
+            {
+                e.SetProcessingResult(FailureProcessingResult.ProceedWithCommit);
+            }
+            e.SetProcessingResult(FailureProcessingResult.Continue);
         }
     }
 }

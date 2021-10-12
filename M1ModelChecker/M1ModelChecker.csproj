@@ -90,7 +90,6 @@
     <Compile Include="ReportWindow.xaml.cs">
       <DependentUpon>ReportWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SharedParameterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HTMLPage1.html" />

@@ -31,6 +31,7 @@ namespace M1ModelChecker
         public ExternalEvent DoTests_ExternalEvent;
         public string Report { get; set; }
         public static FlowDocument FlowDocument { get; set; }
+        public static string MainFileName { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -51,6 +52,8 @@ namespace M1ModelChecker
             var fileContent = string.Empty;
             var filePath = string.Empty;
 
+            buttonShowReport.Visibility = Visibility.Hidden;
+
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = @"C:\Users\" + Environment.UserName; ;
@@ -61,6 +64,7 @@ namespace M1ModelChecker
                 if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     filePath = openFileDialog.FileName;
+                    MainFileName = System.IO.Path.GetFileName(filePath);
                 }
             }
             FilePathViewModel filePathViewModel = new FilePathViewModel()
@@ -81,10 +85,10 @@ namespace M1ModelChecker
 
         private void DoTests(object sender, RoutedEventArgs e)
         {
-
             bool ifTest01Rise = chBox_Test01.IsChecked.GetValueOrDefault();
             if (ifTest01Rise)
             {
+                buttonShowReport.Visibility = Visibility.Hidden;
                 DoTests_ExternalEventHandler.MainWindow = this;
                 DoTests_ExternalEventHandler.CommandData = CommandData;
                 DoTests_ExternalEvent.Raise();

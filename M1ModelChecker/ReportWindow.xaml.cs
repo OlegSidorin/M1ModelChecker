@@ -22,6 +22,7 @@ namespace M1ModelChecker
     /// </summary>
     public partial class ReportWindow : Window
     {
+        public string Filename { get; set; }
         public ReportWindow()
         {
             InitializeComponent();
@@ -50,6 +51,9 @@ namespace M1ModelChecker
                     // SaveFileDialog title
                     dlgSave.Title = "Сохранить отчет в RTF формате";
                     // Show SaveFileDialog
+                    DateTime dateTime = DateTime.Now;
+
+                    dlgSave.FileName = MainWindow.MainFileName.Remove(MainWindow.MainFileName.Length - 4, 4) + $"_report_{dateTime.Day}{dateTime.Month}{dateTime.Year.ToString().Substring(2,2)}.rtf";
                     if (dlgSave.ShowDialog() == System.Windows.Forms.DialogResult.OK && dlgSave.FileName.Length > 0)
                     {
                         TextRange t = new TextRange(flowDocScrollViewer.Document.ContentStart, flowDocScrollViewer.Document.ContentEnd);
