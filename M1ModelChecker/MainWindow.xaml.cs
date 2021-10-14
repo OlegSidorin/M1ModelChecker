@@ -25,13 +25,18 @@ namespace M1ModelChecker
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string ImageLogoSource =  @"~\..\res\m1logo.png";
         public ExternalCommandData CommandData;
+
         public DoTests_ExternalEventHandler DoTests_ExternalEventHandler;
         public ExternalEvent DoTests_ExternalEvent;
+
+        public DeleteSP_ExternalEventHandler DeleteSP_ExternalEventHandler;
+        public ExternalEvent DeleteSP_ExternalEvent;
+
         public string Report { get; set; }
         public static FlowDocument FlowDocument { get; set; }
         public static string MainFileName { get; set; }
+        public static List<ParameterAndFamily> ParametersList {get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +45,9 @@ namespace M1ModelChecker
             {
                 DoTests_ExternalEventHandler = new DoTests_ExternalEventHandler();
                 DoTests_ExternalEvent = ExternalEvent.Create(DoTests_ExternalEventHandler);
+
+                DeleteSP_ExternalEventHandler = new DeleteSP_ExternalEventHandler();
+                DeleteSP_ExternalEvent = ExternalEvent.Create(DeleteSP_ExternalEventHandler);
             }
             catch (Exception ex)
             {
@@ -95,7 +103,6 @@ namespace M1ModelChecker
             }
             if (!ifTest01Rise)
                 MessageBox.Show("Не выбран Тест №1");
-
         }
 
         private void ShowReport(object sender, RoutedEventArgs e)
@@ -107,13 +114,11 @@ namespace M1ModelChecker
             try
             {
                 reportWindow.flowDocScrollViewer.Document = flowDocument;
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
-
 
             reportWindow.Show();
         }
@@ -122,6 +127,14 @@ namespace M1ModelChecker
         {
             Close();
             
+        }
+
+        private void DeleteSharedParameters(object sender, RoutedEventArgs e)
+        {
+            DeleteSP_ExternalEventHandler.MainWindow = this;
+            DeleteSP_ExternalEventHandler.CommandData = CommandData;
+            DeleteSP_ExternalEventHandler.ParametersList = ParametersList;
+            DeleteSP_ExternalEvent.Raise();
         }
     }
 }

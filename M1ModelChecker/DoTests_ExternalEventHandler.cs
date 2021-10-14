@@ -45,7 +45,7 @@ namespace M1ModelChecker
                 Document doc = app.OpenDocumentFile(ModelPathUtils.ConvertUserVisiblePathToModelPath(filePathVM.PathString), openOptions);
 
 
-                #region start FlowDocument
+                #region FlowDocument start
                 FlowDocument = new FlowDocument();
                 Paragraph pTitle = new Paragraph();
                 pTitle.Margin = new Thickness(0, 0, 0, 0);
@@ -112,7 +112,7 @@ namespace M1ModelChecker
                     }
                 }
 
-                #region make FlowDocument
+                #region FlowDocument Block 02
                 foreach (ParameterAndFamily pf in listOfParametersAndComments)
                 {
                     Paragraph pBody = new Paragraph();
@@ -143,12 +143,19 @@ namespace M1ModelChecker
                         Parameter p = fs.LookupParameter(shPar.ParameterName);
                         if (p != null)
                         {
-                            listOfParametersAndFamilies.Add(new ParameterAndFamily()
+                            try
                             {
-                                ParameterName = shPar.ParameterName,
-                                ParameterGuid = shPar.ParameterGuid,
-                                FamilyName = fs.FamilyName
-                            });
+                                if (p.GUID != null)
+                                {
+                                    listOfParametersAndFamilies.Add(new ParameterAndFamily()
+                                    {
+                                        ParameterName = shPar.ParameterName,
+                                        ParameterGuid = shPar.ParameterGuid,
+                                        FamilyName = fs.FamilyName
+                                    });
+                                }
+                            }
+                            catch { };
                         }
                     }
                 }
@@ -156,6 +163,7 @@ namespace M1ModelChecker
                 ParameterAndFamily PF = new ParameterAndFamily();
                 var listOfParametersAndFamiliesDistinct = PF.GetDistinct(listOfParametersAndFamilies);
 
+                #region FlowDocument Block 03
                 //foreach (ParameterAndFamily pf in listOfParametersAndFamiliesDistinct)
                 //{
                 //    Paragraph pBody = new Paragraph();
@@ -180,8 +188,12 @@ namespace M1ModelChecker
                 };
                 pBody101.Inlines.Add(run101);
                 FlowDocument.Blocks.Add(pBody101);
-
+                #endregion
+                
                 var listOfParameterAndFamilies = PF.GetParametersWithListOfFamilies(listOfParametersAndFamiliesDistinct);
+                MainWindow.ParametersList = PF.GetParametersForDeleting(listOfParameterAndFamilies);
+
+                #region FlowDocument Block 04
                 foreach (var item in listOfParameterAndFamilies)
                 {
                     Paragraph pBody01 = new Paragraph();
@@ -236,8 +248,11 @@ namespace M1ModelChecker
                 };
                 pBody202.Inlines.Add(run202);
                 FlowDocument.Blocks.Add(pBody202);
+                #endregion
 
                 var listOfFamilyAndParameters = PF.GetFamilyWithListOfParameters(listOfParametersAndFamiliesDistinct);
+
+                #region FlowDocument Block 05 
                 foreach (var item in listOfFamilyAndParameters)
                 {
                     Paragraph pBody01 = new Paragraph();
@@ -293,11 +308,15 @@ namespace M1ModelChecker
                     FlowDocument.Blocks.Add(pBody);
                 }
                 */
+
+                #endregion
+
                 bool docClosed = doc.Close(false);
                 FlowDocument.TextAlignment = TextAlignment.Left;
                 MainWindow.FlowDocument = FlowDocument;
                 MainWindow.Report = str;
                 MainWindow.buttonShowReport.Visibility = System.Windows.Visibility.Visible;
+
                 //MessageBox.Show($"\n{str}");
             }
             catch (Exception ex)

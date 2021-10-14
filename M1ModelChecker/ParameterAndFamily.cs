@@ -150,6 +150,18 @@ namespace M1ModelChecker
 
             return outputList;
         }
+        public List<ParameterAndFamily> GetParametersForDeleting(List<ParameterAndFamily> input)
+        {
+            List<ParameterAndFamily> output = new List<ParameterAndFamily>();
+            foreach (ParameterAndFamily pf in input)
+            {
+                if (pf.FamilyNames.Count <= 1 )
+                {
+                    output.Add(pf);
+                }
+            }
+            return output;
+        }
         public string GetParametersInOneSting()
         {
             string output = "";

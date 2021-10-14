@@ -79,7 +79,9 @@
                     Height="40"
                     Orientation="Horizontal" >
         </StackPanel>
-
+        <StackPanel Grid.Row="9" Grid.Column="1" Orientation="Vertical" Grid.ColumnSpan="6" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Button Click="DeleteSharedParameters" Content="" Height="30" Width="150" Background="Red" BorderThickness="0"/>
+        </StackPanel>
         <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="6" HorizontalAlignment="Right"
                 Foreground="Snow" BorderThickness="0" Margin="0,0,160,0"
                 FontSize="14"
