@@ -30,13 +30,13 @@ namespace M1ModelChecker
         public DoTests_ExternalEventHandler DoTests_ExternalEventHandler;
         public ExternalEvent DoTests_ExternalEvent;
 
-        public DeleteSP_ExternalEventHandler DeleteSP_ExternalEventHandler;
-        public ExternalEvent DeleteSP_ExternalEvent;
+        public FIXIT_ExternalEventHandler FIXIT_ExternalEventHandler;
+        public ExternalEvent FIXIT_ExternalEvent;
 
         public string Report { get; set; }
         public static FlowDocument FlowDocument { get; set; }
         public static string MainFileName { get; set; }
-        public static List<ParameterAndFamily> ParametersList {get; set; }
+        public static List<ParameterAndFamily> ParametersListToFIX {get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -46,8 +46,8 @@ namespace M1ModelChecker
                 DoTests_ExternalEventHandler = new DoTests_ExternalEventHandler();
                 DoTests_ExternalEvent = ExternalEvent.Create(DoTests_ExternalEventHandler);
 
-                DeleteSP_ExternalEventHandler = new DeleteSP_ExternalEventHandler();
-                DeleteSP_ExternalEvent = ExternalEvent.Create(DeleteSP_ExternalEventHandler);
+                FIXIT_ExternalEventHandler = new FIXIT_ExternalEventHandler();
+                FIXIT_ExternalEvent = ExternalEvent.Create(FIXIT_ExternalEventHandler);
             }
             catch (Exception ex)
             {
@@ -129,12 +129,12 @@ namespace M1ModelChecker
             
         }
 
-        private void DeleteSharedParameters(object sender, RoutedEventArgs e)
+        private void FIXIT_method(object sender, RoutedEventArgs e)
         {
-            DeleteSP_ExternalEventHandler.MainWindow = this;
-            DeleteSP_ExternalEventHandler.CommandData = CommandData;
-            DeleteSP_ExternalEventHandler.ParametersList = ParametersList;
-            DeleteSP_ExternalEvent.Raise();
+            FIXIT_ExternalEventHandler.MainWindow = this;
+            FIXIT_ExternalEventHandler.CommandData = CommandData;
+            FIXIT_ExternalEventHandler.ParametersListToFIX = ParametersListToFIX;
+            FIXIT_ExternalEvent.Raise();
         }
     }
 }

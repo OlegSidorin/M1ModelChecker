@@ -44,6 +44,18 @@ namespace M1ModelChecker
 
                 Document doc = app.OpenDocumentFile(ModelPathUtils.ConvertUserVisiblePathToModelPath(filePathVM.PathString), openOptions);
 
+                string fop = "";
+                var ps = GetSharedParametersFromFOP();
+                var er = GetGroups();
+                foreach (var rr in er)
+                {
+                    fop += rr.Number + ":" + rr.Name;
+                }
+                //foreach (var sp in ps)
+                //{
+                //    fop += sp.Name + " : " + sp.Group + "\n";
+                //}
+                System.Windows.MessageBox.Show(fop);
 
                 #region FlowDocument start
                 FlowDocument = new FlowDocument();
@@ -96,7 +108,7 @@ namespace M1ModelChecker
                 List<ParameterAndFamily> listOfParametersAndComments = new List<ParameterAndFamily>();
                 foreach (SharedParameterElement parameter in sharedParameters)
                 {
-                    string report = "";
+                    Report report;
                     string guid = parameter.GuidValue.ToString();
                     string name = parameter.Name;
                     if (IsSomethingWrongWithParameter(guid, name, out report))
@@ -105,7 +117,8 @@ namespace M1ModelChecker
                         {
                             ParameterName = name,
                             ParameterGuid = guid,
-                            Comment = report
+                            Cause = report.Cause,
+                            Comment = report.Comment //+ " : " + report.Cause.ToFriendlyString() 
                         };
                         listOfParametersAndComments.Add(parameterAndFamily);
                         str += $"\n{name} - {report}";
@@ -151,6 +164,7 @@ namespace M1ModelChecker
                                     {
                                         ParameterName = shPar.ParameterName,
                                         ParameterGuid = shPar.ParameterGuid,
+                                        Cause = shPar.Cause,
                                         FamilyName = fs.FamilyName
                                     });
                                 }
@@ -191,7 +205,7 @@ namespace M1ModelChecker
                 #endregion
                 
                 var listOfParameterAndFamilies = PF.GetParametersWithListOfFamilies(listOfParametersAndFamiliesDistinct);
-                MainWindow.ParametersList = PF.GetParametersForDeleting(listOfParameterAndFamilies);
+                MainWindow.ParametersListToFIX = listOfParameterAndFamilies;
 
                 #region FlowDocument Block 04
                 foreach (var item in listOfParameterAndFamilies)
@@ -208,7 +222,7 @@ namespace M1ModelChecker
                     pBody01.Inlines.Add(run011);
                     Run run012 = new Run()
                     {
-                        Text = $"{item.ParameterName}",
+                        Text = $"{item.ParameterName} ({item.Cause.ToFriendlyString()})",
                         FontFamily = new System.Windows.Media.FontFamily("Verdana"),
                         FontWeight = FontWeights.Bold,
                         FontSize = 12

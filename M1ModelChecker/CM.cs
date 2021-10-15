@@ -10,18 +10,67 @@ namespace M1ModelChecker
     {
         public static string PathToFOP { get; } = Main.DllFolderLocation + @"\res\ФОП2019.txt";
         public static List<SharedParameterFromFOP> SharedParametersFromFOP { get; } = GetSharedParametersFromFOP();
+        public static List<GroupFromFop> GetGroups()
+        {
+            string line;
+
+            string id, gname;
+            int startId, endId, startN, endN;
+
+            List<GroupFromFop> outputList = new List<GroupFromFop>();
+            System.IO.StreamReader file = new System.IO.StreamReader(PathToFOP);
+            while ((line = file.ReadLine()) != null)
+            {
+
+                if (line.Contains("GROUP") && !line.Contains("*"))
+                {
+                    startId = line.IndexOf('\t', 0) + 1;
+                    endId = line.IndexOf('\t', startId);
+                    id = line.Substring(startId, endId - startId);
+                    startN = endId + 1;
+                    endN = line.IndexOf('\n', startN);
+                    try
+                    {
+                        gname = line.Substring(startN, endN - startN);
+                    }
+                    catch { gname = ""; };
+                    GroupFromFop groupFromFOP = new GroupFromFop()
+                    {
+                        Number = id,
+                        Name = gname
+                    };
+                    outputList.Add(groupFromFOP);
+                }
+            }
+
+            file.Close();
+            return outputList;
+        }
         public static List<SharedParameterFromFOP> GetSharedParametersFromFOP()
         {
             List<SharedParameterFromFOP> outputList = new List<SharedParameterFromFOP>();
             string line;
-            string guid, name, type;
+            string guid, name, type, ctype, group;
             
-            int startGuid, endGuid, startName, endName, startType, endType;
+            int startGuid, endGuid, startName, endName, startType, endType, startCtype, endCtype, startGroup, endGroup;
+
+            List<GroupFromFop> gFOP = GetGroups();
+            string getGroup(List<GroupFromFop> groups, string groupNumber)
+            {
+                
+                foreach (var gr in groups)
+                {
+                    if (gr.Number == groupNumber)
+                        return gr.Name;
+                }
+                return "";
+            }
 
             // Read the file line by line.  
             System.IO.StreamReader file = new System.IO.StreamReader(PathToFOP);
             while ((line = file.ReadLine()) != null)
             {
+
                 if (line.Contains("PARAM"))
                 {
                     startGuid = line.IndexOf('\t', 0) + 1;
@@ -33,11 +82,18 @@ namespace M1ModelChecker
                     startType = endName + 1;
                     endType = line.IndexOf('\t', startType + 1);
                     type = line.Substring(startType, endType - startType);
+                    startCtype = endType + 1;
+                    endCtype = line.IndexOf('\t', startCtype);
+                    ctype = line.Substring(startCtype, endCtype - startCtype);
+                    startGroup = endCtype + 1;
+                    endGroup = line.IndexOf('\t', startGroup);
+                    group = line.Substring(startGroup, endGroup - startGroup);
                     SharedParameterFromFOP sharedParameterFromFOP = new SharedParameterFromFOP()
                     {
                         Guid = guid,
                         Name = name,
-                        Type = type
+                        Type = type,
+                        Group = getGroup(gFOP, group)
                     };
                     outputList.Add(sharedParameterFromFOP);
                 }
@@ -46,35 +102,55 @@ namespace M1ModelChecker
             file.Close();
             return outputList;
         }
-        public static bool IsSomethingWrongWithParameter (string guid, string name, out string report)
+        public static bool IsSomethingWrongWithParameter (string guid, string name, out Report report)
         {
-            report = "";
             bool output = true;
             foreach (var par in SharedParametersFromFOP)
             {
                 if (guid == par.Guid && name == par.Name)
                 {
-                    report = "Параметр из ФОП";
+                    report = new Report()
+                    {
+                        Cause = Causes.OK,
+                        Comment = "Параметр из ФОП"
+                    };
                     return false;
                 }
                 if (guid != par.Guid && name == par.Name)
                 {
-                    report = "Параметр имеет неверный guid";
+                    report = new Report()
+                    {
+                        Cause = Causes.GoodNameWrongGuid,
+                        Comment = "Параметр имеет неверный guid"
+                    };
                     return true;
                 }
                 if (guid == par.Guid && name != par.Name)
                 {
-                    report = "Параметр имеет неверное имя";
+                    report = new Report()
+                    {
+                        Cause = Causes.GoodGuidWrongName,
+                        Comment = "Параметр имеет неверное имя"
+                    };
                     return true;
                 }
-                if (guid != par.Guid && name != par.Name)
-                {
-                    report = "Параметр не из ФОП";
-                }
+                //if (guid != par.Guid && name != par.Name)
+                //{
+                //    report = new Report()
+                //    {
+                //        Cause = Causes.UnknownState,
+                //        Comment = ""
+                //    };
+                //}
             }
-
+            report = new Report()
+            {
+                Cause = Causes.WrongGuidAndName,
+                Comment = "Параметр не из ФОП"
+            };
             return output;
         }
+
         public static string MakeHTML(string str)
         {
             string begin = $@"<!DOCTYPE html><html lang=""ru"" xmlns=""http://www.w3.org/1999/xhtml""><head><meta charset = ""utf-8"" /><title> Отчет </title></head ><body style=""font-family: verdana; "">";
@@ -87,11 +163,16 @@ namespace M1ModelChecker
         public string Name { get; set; }
         public string Guid { get; set; }
         public string Type { get; set; }
+        public string Group { get; set; }
     }
-    class WrongParameter
+    class Report
     {
-        public bool NotInFOP { get; set; }
-        public bool WrongGuid { get; set; }
-        public bool WrongName { get; set; }
+        public Causes Cause { get; set; }
+        public string Comment { get; set; }
+    }
+    class GroupFromFop
+    {
+        public string Number { get; set; }
+        public string Name { get; set; }
     }
 }

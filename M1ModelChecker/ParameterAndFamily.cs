@@ -10,7 +10,7 @@ namespace M1ModelChecker
         public string FamilyName { get; set; }
         public List<string> FamilyNames { get; set; }
         public List<string> ParameterNames { get; set; }
-
+        public Causes Cause { get; set; }
         public List<ParameterAndFamily> GetDistinct(List<ParameterAndFamily> inputList)
         {
             var outputList = new List<ParameterAndFamily>();
@@ -80,6 +80,7 @@ namespace M1ModelChecker
                     {
                         ParameterName = pf.ParameterName,
                         ParameterGuid = pf.ParameterGuid,
+                        Cause = pf.Cause,
                         FamilyNames = new List<string>()
                     };
                     newPF.FamilyNames.Add(pf.FamilyName);
@@ -139,12 +140,12 @@ namespace M1ModelChecker
                         FamilyName = pf.FamilyName,
                         ParameterNames = new List<string>()
                     };
-                    newPF.ParameterNames.Add(pf.ParameterName + " (" + pf.ParameterGuid + ")");
+                    newPF.ParameterNames.Add(pf.ParameterName + $" ( {pf.ParameterGuid} : {pf.Cause.ToFriendlyString()} )");
                     outputList.Add(newPF);
                 }
                 else
                 {
-                    GetElementWithSameFamily(pf, outputList).ParameterNames.Add(pf.ParameterName + " (" + pf.ParameterGuid + ")");
+                    GetElementWithSameFamily(pf, outputList).ParameterNames.Add(pf.ParameterName + $" ( {pf.ParameterGuid} : {pf.Cause.ToFriendlyString()} )");
                 }
             }
 

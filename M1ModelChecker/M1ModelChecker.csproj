@@ -74,8 +74,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Causes.cs" />
     <Compile Include="CM.cs" />
-    <Compile Include="DeleteSP_ExternalEventHandler.cs" />
+    <Compile Include="FIXIT_ExternalEventHandler.cs" />
     <Compile Include="DoTests_ExternalEventHandler.cs" />
     <Compile Include="FilePathViewModel.cs" />
     <Compile Include="FolderBrowserWindow.xaml.cs">
