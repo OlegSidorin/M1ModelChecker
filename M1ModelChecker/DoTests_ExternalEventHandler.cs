@@ -44,18 +44,18 @@ namespace M1ModelChecker
 
                 Document doc = app.OpenDocumentFile(ModelPathUtils.ConvertUserVisiblePathToModelPath(filePathVM.PathString), openOptions);
 
-                string fop = "";
-                var ps = GetSharedParametersFromFOP();
-                var er = GetGroups();
-                foreach (var rr in er)
-                {
-                    fop += rr.Number + ":" + rr.Name;
-                }
+                //string fop = "";
+                //var ps = GetSharedParametersFromFOP();
+                //var groupsFull = GetGroups();
+                //foreach (var groupFull in groupsFull)
+                //{
+                //    fop += groupFull.Number + ": <" + groupFull.Name + ">\n";
+                //}
                 //foreach (var sp in ps)
                 //{
                 //    fop += sp.Name + " : " + sp.Group + "\n";
                 //}
-                System.Windows.MessageBox.Show(fop);
+                //System.Windows.MessageBox.Show(fop);
 
                 #region FlowDocument start
                 FlowDocument = new FlowDocument();
@@ -265,6 +265,26 @@ namespace M1ModelChecker
                 #endregion
 
                 var listOfFamilyAndParameters = PF.GetFamilyWithListOfParameters(listOfParametersAndFamiliesDistinct);
+                MainWindow.FamiliesListToFIX = listOfFamilyAndParameters;
+
+                var listOfWrongParametersOnlyInProject = new List<string>();
+                foreach (var p in listOfParametersAndComments)
+                {
+                    if (p.Cause == Causes.WrongGuidAndName)
+                    {
+                        if ( !p.ParameterName.Contains("ADSK_") )
+                        {
+                            if ( !p.ParameterName.ToLower().Contains("m1") )
+                                listOfWrongParametersOnlyInProject.Add(p.ParameterName);
+                        }
+                        
+                    }
+                }
+                foreach (var item in listOfParameterAndFamilies)
+                {
+                    listOfWrongParametersOnlyInProject.Remove(item.ParameterName);
+                }
+                MainWindow.ParametersOnlyProjectToFIX = listOfWrongParametersOnlyInProject;
 
                 #region FlowDocument Block 05 
                 foreach (var item in listOfFamilyAndParameters)
@@ -335,7 +355,7 @@ namespace M1ModelChecker
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Возникли проблемы с открытием. И вот какие: \n" + ex.ToString());
+                System.Windows.MessageBox.Show("Возникли проблемы. Ужасно...\n" + ex.ToString());
             };
             
             //MessageBox.Show("Privet");

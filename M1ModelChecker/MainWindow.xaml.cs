@@ -37,6 +37,8 @@ namespace M1ModelChecker
         public static FlowDocument FlowDocument { get; set; }
         public static string MainFileName { get; set; }
         public static List<ParameterAndFamily> ParametersListToFIX {get; set; }
+        public static List<ParameterAndFamily> FamiliesListToFIX {get; set; }
+        public static List<string> ParametersOnlyProjectToFIX { get; set; }
         public MainWindow()
         {
             InitializeComponent();
@@ -134,6 +136,8 @@ namespace M1ModelChecker
             FIXIT_ExternalEventHandler.MainWindow = this;
             FIXIT_ExternalEventHandler.CommandData = CommandData;
             FIXIT_ExternalEventHandler.ParametersListToFIX = ParametersListToFIX;
+            FIXIT_ExternalEventHandler.FamiliesListToFIX = FamiliesListToFIX;
+            FIXIT_ExternalEventHandler.ParametersOnlyProjectToFIX = ParametersOnlyProjectToFIX;
             FIXIT_ExternalEvent.Raise();
         }
     }

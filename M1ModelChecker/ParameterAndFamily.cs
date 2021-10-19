@@ -94,6 +94,17 @@ namespace M1ModelChecker
 
             return outputList;
         }
+        public static ParameterAndFamily GetParameterUsingName(string name, List<ParameterAndFamily> parameterAndFamilies)
+        {
+            foreach (ParameterAndFamily parameterAndFamily in parameterAndFamilies)
+            {
+                if (parameterAndFamily.ParameterName == name)
+                {
+                    return parameterAndFamily;
+                }
+            }
+            return new ParameterAndFamily();
+        }
         public string GetFamiliesInOneSting()
         {
             string output = "";
@@ -140,12 +151,12 @@ namespace M1ModelChecker
                         FamilyName = pf.FamilyName,
                         ParameterNames = new List<string>()
                     };
-                    newPF.ParameterNames.Add(pf.ParameterName + $" ( {pf.ParameterGuid} : {pf.Cause.ToFriendlyString()} )");
+                    newPF.ParameterNames.Add(pf.ParameterName); //(pf.ParameterName + $" ( {pf.ParameterGuid} : {pf.Cause.ToFriendlyString()} )");
                     outputList.Add(newPF);
                 }
                 else
                 {
-                    GetElementWithSameFamily(pf, outputList).ParameterNames.Add(pf.ParameterName + $" ( {pf.ParameterGuid} : {pf.Cause.ToFriendlyString()} )");
+                    GetElementWithSameFamily(pf, outputList).ParameterNames.Add(pf.ParameterName); //(pf.ParameterName + $" ( {pf.ParameterGuid} : {pf.Cause.ToFriendlyString()} )");
                 }
             }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace M1ModelChecker
 {
@@ -28,12 +29,17 @@ namespace M1ModelChecker
                     endId = line.IndexOf('\t', startId);
                     id = line.Substring(startId, endId - startId);
                     startN = endId + 1;
-                    endN = line.IndexOf('\n', startN);
+                    gname = "";
                     try
                     {
-                        gname = line.Substring(startN, endN - startN);
+                        gname = line.Substring(startN, line.Length - startN);
+                    } 
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
                     }
-                    catch { gname = ""; };
+                    
+
                     GroupFromFop groupFromFOP = new GroupFromFop()
                     {
                         Number = id,
@@ -71,7 +77,7 @@ namespace M1ModelChecker
             while ((line = file.ReadLine()) != null)
             {
 
-                if (line.Contains("PARAM"))
+                if (line.Contains("PARAM") && !line.Contains("*"))
                 {
                     startGuid = line.IndexOf('\t', 0) + 1;
                     endGuid = line.IndexOf('\t', startGuid + 1);
@@ -149,6 +155,23 @@ namespace M1ModelChecker
                 Comment = "Параметр не из ФОП"
             };
             return output;
+        }
+
+        public static SharedParameterFromFOP GetParameterFromFOPUsingGUID(string guid)
+        {
+            List<SharedParameterFromFOP> parameters = GetSharedParametersFromFOP();
+            foreach (var p in parameters)
+            {
+                if (p.Guid == guid)
+                    return p;
+            }
+            return new SharedParameterFromFOP()
+            {
+                Name = "",
+                Guid = "",
+                Group = "",
+                Type = ""
+            };
         }
 
         public static string MakeHTML(string str)
